@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from datetime import date
+from .models import Post, Author , Tag
 
 # Create your views here.
 
@@ -75,19 +76,22 @@ def get_date(post):
 
 
 def home_page(request):
-    latest_posts = sorted(all_posts , key=get_date)
-    top_posts = latest_posts[-3:]
+    # latest_posts = sorted(all_posts , key=get_date)
+    latest_posts = Post.objects.all().order_by('date')
+    # top_posts = latest_posts[-3:]
     return render(request , "blog/index.html" , {
-        "posts_pass":top_posts
+        "posts_pass":latest_posts
     })
 
 def posts(request):
+    posts_to_show = Post.objects.all()
     return render(request , "blog/all-posts.html",{
-        "all_posts" : all_posts
+        "all_posts" : posts_to_show
     })
 
 def post_detail(request , slug):
-    identified_post = next(post for post in all_posts if post['slug'] == slug)
+    identified_post = Post.objects.get(slug=slug)
+    # identified_post = next(post for post in all_posts if post['slug'] == slug)
     return render(request , "blog/post-detail.html" , {
         "post" : identified_post
     })
