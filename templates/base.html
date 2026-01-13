@@ -15,9 +15,10 @@
     <nav>
       <a href="{% url "all-posts" %}">All Posts</a>
       <a href="{% url "read-later" %}">Stored Posts </a>
+      <a href= "{% url "login" %}">Login</a>
+      <a href="{% url "sign-up" %}">Sign Up</a>
     </nav>
   </header>
-
   {% block content %}
   {% endblock %}
 </body>

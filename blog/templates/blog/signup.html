@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}
+SignUp
+{% endblock %}
+
+{% block css_files %}
+<link rel="stylesheet" href= {% static "blog/sign-up.css" %} />
+{% endblock %}
+
+{% block content %}
+<section id="sign-up">
+<h2>Sign Up</h2>
+  {% if messages %}
+    <div class="container" >
+      {% for message in messages %}
+        <div role="alert" id="message">
+          {{ message }}
+        </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+<form method="POST" action="{% url "sign-up" %}">  
+    {% csrf_token %}
+    <div class="form-control">
+    <label for="username">Username</label>
+    <input type="text" name="username" placeholder= "Username" id="username" required>
+    <label for="firstname">First Name</label>
+    <input type="text" name="firstname" placeholder="First Name" id="firstname" required>
+    <label for="lastname">Last Name</label>
+    <input type="text" name="lastname" placeholder="Last Name" id="lastname">
+    <label for="email">Email</label>
+    <input type="email" name="email" placeholder="Email" id="email" required>
+    <label for="pass1">Password</label>
+    <input type="password" placeholder="Password" id="pass1" name="pass1" required>
+    <label for="pass2"> Confirm Password</label>
+    <input type="password" placeholder="Confirm Password" id="pass2" name="pass2" required>
+
+    <button>Submit</button>
+    </div>
+</form>
+</section>
+
+{% endblock %}

@@ -6,6 +6,9 @@ from django.views import View
 from django.shortcuts import render 
 from django.http import HttpResponseRedirect
 from django.urls import reverse
+from django.contrib.auth.models import User
+from django.contrib import messages
+from django.contrib.auth import login , authenticate
 
 
 # Create your views here.
@@ -99,7 +102,54 @@ class ReadLaterView(View):
 
         return HttpResponseRedirect("/")
     
+class SignUpView(View):
+    def get(self , request):
+        return render(request , "blog/signup.html")
+    
+    def post(self,request):
+        username = request.POST.get("username")
+        firstname = request.POST.get("firstname")
+        lastname = request.POST.get("lastname")
+        email = request.POST.get("email")
+        password1 = request.POST.get("pass1")
+        password2 = request.POST.get("pass2")
 
+        if password1!= password2 :
+            messages.error(request,"Passwords does not match!")
+            return render(request ,"blog/signup.html")
+        
+        if User.objects.filter(username = username).exists():
+            messages.error(request ,"This username already exists, please take a new one!")
+            return render(request , "blog/signup.html")
+        
+        if User.objects.filter(email=email).exists():
+            messages.error(request ,"This email id already exists , try logging in...")
+            return render(request , "blog/login.html")
+        
+        user = User.objects.create_user(username=username , first_name=firstname , 
+                                        last_name=lastname , email=email , password=password1)
+        login(request , user)
+        messages.success(request ,"Welcome " f"{username} !!!")
+        return render(request , "blog/index.html")
+
+
+class LoginView(View):
+    def get(self , request):
+        return render(request , "blog/login.html")
+    
+    def post(self ,request):
+        username = request.POST.get("username")
+        password = request.POST.get("pass1")
+
+        user = authenticate(request , username=username , password=password)
+
+        if user is not None:
+            login(request , user)
+            messages.success(request ,"Welcome back" f"{username}")
+            return render(request , "blog/index.html")
+        else :
+            messages.error(request ,"Username or password is wrong!")
+            return render(request , "blog/login.html")
 
         
 

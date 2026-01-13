@@ -11,6 +11,15 @@ My Blog
 {% endblock %}
 
 {% block content %}
+  {% if messages %}
+    <div class="container" >
+      {% for message in messages %}
+        <div role="alert" id="message">
+          {{ message }}
+        </div>
+      {% endfor %}
+    </div>
+  {% endif %}
 <section id="welcome">
   <header>
     <img src="{% static "blog/images/sam.jpeg" %}" alt="Sam - The Author Of This Blog" />
